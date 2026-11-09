@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Journey Through the History of Art - Interactive Timeline</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            400: '#F59E0B',
+                            500: '#D97706',
+                            600: '#B45309',
+                        },
+                        dark: {
+                            900: '#0a0a0c',
+                            800: '#121318',
+                            700: '#1c1e26',
+                            600: '#2a2d3a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .timeline-scroll::-webkit-scrollbar { height: 6px; }
+        .timeline-scroll::-webkit-scrollbar-track { background: #121318; }
+        .timeline-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+        .timeline-scroll::-webkit-scrollbar-thumb:hover { background: #d97706; }
+
+        .glass-panel {
+            background: rgba(18, 19, 24, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-node {
+            background: rgba(30, 32, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gold-glow { box-shadow: 0 0 25px rgba(217, 119, 6, 0.25); }
+
+        .art-image-frame {
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .art-image-frame::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            pointer-events: none;
+        }
+
+        .fade-enter { opacity: 0; transform: translateY(12px) scale(0.98); }
+        .fade-active { opacity: 1; transform: translateY(0) scale(1); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 font-sans min-h-screen flex flex-col selection:bg-gold-500 selection:text-black overflow-x-hidden">
+
+    <!-- ENHANCED WELCOME LANDING SCREEN WITH FULL BACKGROUND & UNIFIED TEXT STYLING -->
+    <div id="welcome-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #090a0f 0%, #171b26 50%, #0d111a 100%); color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; text-align: center; font-family: system-ui, -apple-system, sans-serif; padding: 20px; box-sizing: border-box; overflow: hidden;">
+        
+        <!-- Animated Background Orbs -->
+        <div style="position: absolute; top: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(243, 156, 18, 0.25) 0%, rgba(0,0,0,0) 70%); filter: blur(50px); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: -10%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(211, 84, 0, 0.2) 0%, rgba(0,0,0,0) 70%); filter: blur(50px); pointer-events: none;"></div>
+
+        <div style="position: relative; background: rgba(20, 24, 33, 0.9); border: 1.5px solid rgba(243, 156, 18, 0.4); border-radius: 24px; padding: 48px 40px; max-width: 580px; width: 100%; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(243, 156, 18, 0.15); backdrop-filter: blur(20px); animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
+            
+            <!-- Art Icon Badge -->
+            <div style="width: 68px; height: 68px; margin: 0 auto 20px auto; background: linear-gradient(135deg, #f39c12, #f1c40f); border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(243, 156, 18, 0.45);">
+                <i class="fa-solid fa-palette" style="font-size: 32px; color: #0a0b0e;"></i>
+            </div>
+
+            <!-- Header Titles -->
+            <h1 style="background: linear-gradient(135deg, #ffffff 30%, #f39c12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;">
+                A Journey Through the History of Art
+            </h1>
+            <p style="color: #a0a6b5; margin: 0 0 28px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">
+                HUM 101 • Interactive Timeline Project
+            </p>
+            
+            <!-- Information Card -->
+            <div style="text-align: left; background: rgba(10, 12, 16, 0.85); border: 1px solid rgba(243, 156, 18, 0.25); border-radius: 14px; padding: 22px 24px; margin-bottom: 30px; border-left: 5px solid #f39c12; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
+                <p style="margin: 8px 0; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #94a3b8; font-weight: 500;">Submitted by:</span>
+                    <strong style="background: linear-gradient(135deg, #f39c12, #f1c40f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; font-size: 1.05rem;">Jovert Fryl E. Renejane</strong>
+                </p>
+                <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 10px 0;"></div>
+                <p style="margin: 8px 0; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #94a3b8; font-weight: 500;">Year & Course:</span>
+                    <strong style="background: linear-gradient(135deg, #f39c12, #f1c40f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; font-size: 1.05rem;">BSCSAI 1st Year</strong>
+                </p>
+                <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 10px 0;"></div>
+                <p style="margin: 8px 0; font-size: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #94a3b8; font-weight: 500;">Submitted to:</span>
+                    <strong style="background: linear-gradient(135deg, #f39c12, #f1c40f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; font-size: 1.05rem;">Ms. Mitch Casul</strong>
+                </p>
+            </div>
+
+            <!-- Launch Button -->
+            <button onclick="document.getElementById('welcome-screen').style.opacity='0'; setTimeout(() => document.getElementById('welcome-screen').style.display='none', 400);" 
+                    onmouseover="this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 12px 30px rgba(243, 156, 18, 0.65)';" 
+                    onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(243, 156, 18, 0.45)';" 
+                    style="background: linear-gradient(135deg, #f39c12 0%, #d35400 100%); color: #ffffff; font-weight: 700; padding: 16px 32px; border: none; border-radius: 12px; font-size: 1.05rem; cursor: pointer; transition: all 0.25s ease; width: 100%; box-shadow: 0 8px 25px rgba(243, 156, 18, 0.45); letter-spacing: 0.5px;">
+                EXPLORE TIMELINE →
+            </button>
+        </div>
+    </div>
+
+    <style>
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.92) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        #welcome-screen { transition: opacity 0.4s ease; }
+    </style>
+
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-white/10 px-4 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-600 to-yellow-400 flex items-center justify-center text-black font-serif font-bold text-xl shadow-lg">
+                    <i class="fa-solid fa-palette text-dark-900"></i>
+                </div>
+                <div>
+                    <h1 class="font-serif text-lg md:text-xl font-bold tracking-wide text-white flex items-center gap-2">
+                        A Journey Through the History of Art
+                    </h1>
+                    <p class="text-xs text-gold-400 font-medium tracking-wider uppercase">HUM 101 • Interactive Timeline</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between md:justify-end gap-4">
+                <div class="relative flex-1 md:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="searchInput" placeholder="Search movement, artist..." 
+                           class="w-full bg-dark-800/90 text-sm text-gray-200 pl-9 pr-4 py-1.5 rounded-lg border border-white/10 focus:outline-none focus:border-gold-500 transition-colors">
+                </div>
+
+                <div class="bg-dark-800 px-3 py-1.5 rounded-lg border border-white/10 text-xs font-semibold text-gray-300 whitespace-nowrap">
+                    <span id="currentCounter" class="text-gold-400">1</span> / <span id="totalCounter">17</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HORIZONTAL TIMELINE NAVIGATION TRACK -->
+    <nav class="relative z-40 bg-dark-800/80 border-b border-white/10 py-4 px-4 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between text-xs text-gray-400 mb-2 px-1">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-gold-400"></i> Chronological Timeline Track</span>
+                <span class="hidden sm:inline-block text-gray-400 italic">Click any node or drag to scroll</span>
+            </div>
+            <div id="timelineTrack" class="timeline-scroll flex items-center space-x-6 overflow-x-auto py-3 px-2 scroll-smooth"></div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT VIEWPORT -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 flex flex-col justify-center">
+        <article id="movementCard" class="glass-panel rounded-2xl border border-white/10 p-6 md:p-8 lg:p-10 fade-active gold-glow relative overflow-hidden">
+            
+            <div class="absolute -right-20 -top-20 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+                
+                <!-- LEFT COLUMN: ARTWORK DISPLAY -->
+                <div class="lg:col-span-5 flex flex-col items-center">
+                    <div class="w-full art-image-frame rounded-xl overflow-hidden bg-dark-800 border border-white/15 group">
+                        <img id="artImage" src="" alt="Artwork" 
+                             class="w-full h-[320px] md:h-[400px] object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                             onerror="this.src='https://placehold.co/600x600/1c1e26/F59E0B?text=Add+Image+Here'">
+                    </div>
+
+                    <div class="w-full bg-dark-800/90 border border-white/10 mt-3 p-3.5 rounded-xl text-center">
+                        <p class="text-xs text-gold-400 font-semibold tracking-wider uppercase mb-0.5">Featured Artwork</p>
+                        <h4 id="artTitle" class="font-serif font-bold text-gray-100 text-base"></h4>
+                        <p id="artistName" class="text-xs text-gray-400 mt-0.5"></p>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: MOVEMENT DETAILS -->
+                <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+                    <div>
+                        <!-- RIGHT COLUMN: MOVEMENT DETAILS -->
+                <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+                    <div>
+                        <!-- 🔊 AUDIO GUIDE BUTTON -->
+                        <button id="audioBtn" onclick="playAudioGuide()" class="mb-4 px-4 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 border border-gold-500/40 text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer">
+                            <i class="fa-solid fa-volume-high"></i> Play Audio Guide
+                        </button>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span id="movementEra" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30"></span>
+                            <span id="movementIndexBadge" class="text-xs font-mono text-gray-400 tracking-widest uppercase">Movement 01 of 17</span>
+                        </div>
+                        <h2 id="movementTitle" class="font-serif text-3xl md:text-4xl font-extrabold text-white tracking-tight"></h2>
+                    </div>
+
+                    <div class="bg-dark-800/50 rounded-xl p-4 border border-white/5">
+                        <h3 class="text-xs font-bold text-gold-400 uppercase tracking-wider mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info"></i> Brief Description
+                        </h3>
+                        <p id="movementDesc" class="text-sm md:text-base text-gray-300 leading-relaxed font-light"></p>
+                    </div>
+
+                    
+                </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span id="movementEra" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30"></span>
+                            <span id="movementIndexBadge" class="text-xs font-mono text-gray-400 tracking-widest uppercase">Movement 01 of 17</span>
+                        </div>
+                        <h2 id="movementTitle" class="font-serif text-3xl md:text-4xl font-extrabold text-white tracking-tight"></h2>
+                    </div>
+
+                    <div class="bg-dark-800/50 rounded-xl p-4 border border-white/5">
+                        <h3 class="text-xs font-bold text-gold-400 uppercase tracking-wider mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-paintbrush"></i> Key Characteristics & Styles
+                        </h3>
+                        <p id="movementChars" class="text-sm text-gray-300 leading-relaxed"></p>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-gold-900/30 to-dark-800/60 rounded-xl p-4 border border-gold-500/30 relative">
+                        <div class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-8 bg-gold-500 rounded-r"></div>
+                        <h3 class="text-xs font-bold text-gold-400 uppercase tracking-wider mb-1 flex items-center gap-2 pl-2">
+                            <i class="fa-solid fa-lightbulb"></i> Interesting Fact
+                        </h3>
+                        <p id="movementFact" class="text-sm text-gray-200 italic leading-relaxed pl-2"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD FOOTER CONTROLS -->
+            <div class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between gap-4">
+                <button id="prevBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-dark-800 hover:bg-dark-700 text-gray-200 text-sm font-semibold border border-white/10 transition-all hover:border-gold-500 disabled:opacity-30 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-left"></i> Previous
+                </button>
+
+                <div class="hidden md:flex items-center gap-2 text-xs text-gray-400">
+                    <kbd class="px-2 py-1 bg-dark-800 rounded border border-white/10">←</kbd>
+                    <kbd class="px-2 py-1 bg-dark-800 rounded border border-white/10">→</kbd>
+                    <span>Use arrow keys to navigate</span>
+                </div>
+
+                <button id="nextBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gold-600 hover:bg-gold-500 text-black text-sm font-bold shadow-lg transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed">
+                    Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </article>
+    </main>
+
+    <footer class="border-t border-white/10 py-4 text-center text-xs text-gray-400">
+        <div class="max-w-7xl mx-auto px-4">
+            A Journey Through the History of Art • Interactive Art History Timeline
+        </div>
+    </footer>
+
+    <script>
+            const movements = [
+            { 
+                id: 1, name: "Renaissance Art", period: "c. 1400 – 1600", 
+                desc: "A major cultural awakening originating in Florence, Italy. It turned away from medieval flatness to revive the philosophy, scientific inquiry, and naturalistic visual beauty of ancient Greece and Rome with a focus on human potential.", 
+                characteristics: "Mathematical linear perspective creating 3D depth, precise anatomical study, smooth color blending (sfumato), and harmonious compositions.", 
+                artist: "Leonardo da Vinci", artwork: "Mona Lisa", 
+                image: "images/mona-lisa.jpg", 
+                fact: "Renaissance artists mastered linear perspective, making flat 2-dimensional canvases look like windows into real 3D space." 
+            },
+            { 
+                id: 2, name: "Baroque Art", period: "c. 1600 – 1750", 
+                desc: "Following the Renaissance, Baroque art replaced quiet harmony with theatrical drama, intense emotional tension, and sweeping grandeur designed to inspire awe.", 
+                characteristics: "Chiaroscuro (extreme contrast between light and dark), dynamic diagonal compositions, intense movement, and opulent grandeur.", 
+                artist: "Caravaggio", artwork: "The Calling of St. Matthew", 
+                image: "images/baroque.jpg", 
+                fact: "Baroque painters used 'tenebrism'—pitch-black shadows pierced by a dramatic spotlight—to create intense theatrical emotion." 
+            },
+            { 
+                id: 3, name: "Rococo Art", period: "c. 1730 – 1760", 
+                desc: "Emerging in 18th-century France as a playful reaction against heavy Baroque drama, Rococo moved art into private salons, focusing on romance, luxury, and lighthearted elegance.", 
+                characteristics: "Soft pastel color palettes, delicate asymmetrical curves, ornate decorative scrollwork, and themes of leisure.", 
+                artist: "Jean-Honoré Fragonard", artwork: "The Swing", 
+                image: "images/rococo.jpg", 
+                fact: "Rococo art reflected the aristocratic lifestyle of Versailles, prioritizing playful romance and pastel charm over heroic gravity." 
+            },
+            { 
+                id: 4, name: "Classicism / Neoclassicism", period: "c. 1750 – 1830", 
+                desc: "Sparked by archaeological discoveries at Pompeii, Neoclassicism rejected Rococo frivolity in favor of solemnity, order, and classical moral duty inspired by ancient Greece and Rome.", 
+                characteristics: "Clean outlines, heroic classical subject matter, austere color palettes, structured symmetry, and smooth invisible brushwork.", 
+                artist: "Jacques-Louis David", artwork: "The Death of Marat", 
+                image: "images/neoclassicism.jpg", 
+                fact: "Neoclassicism aligned closely with the ideals of the French Revolution, honoring civic duty, sacrifice, and ancient Roman virtue." 
+            },
+            { 
+                id: 5, name: "Romanticism", period: "c. 1800 – 1850", 
+                desc: "A passionate counter-reaction to Enlightenment rationalism and the Industrial Revolution. Romanticism championed individual emotion, sublime nature, and dramatic heroic struggles.", 
+                characteristics: "Vibrant emotional color, dramatic brushwork, chaotic dynamic composition, intense atmospheric lighting, and themes of awe and terror.", 
+                artist: "Eugène Delacroix", artwork: "Liberty Leading the People", 
+                image: "images/romanticism.jpg", 
+                fact: "Romantic artists focused on the 'sublime'—the awe-inspiring, terrifying power and beauty of wild, untamed nature." 
+            },
+            { 
+                id: 6, name: "Realism", period: "c. 1840 – 1880", 
+                desc: "Emerging in France after the 1848 Revolution, Realism rejected idealization and dramatic mythology to depict unvarnished everyday life, working-class labor, and social reality.", 
+                characteristics: "Earthy natural color palettes, unglamorized subjects, tactile textures, focus on rural laborers and modern urban life.", 
+                artist: "Gustave Courbet", artwork: "The Stone Breakers", 
+                image: "images/realism.jpg", 
+                fact: "Realist painters famously declared: 'Show me an angel and I will paint one,' insisting on painting only what they could physically see." 
+            },
+            { 
+                id: 7, name: "Impressionism", period: "c. 1865 – 1885", 
+                desc: "A revolutionary French movement that moved out of private studios into the open air (en plein air), capturing fleeting moments of natural light, atmosphere, and modern leisure.", 
+                characteristics: "Short visible dabs of pure paint, vivid unmixed color, emphasis on natural light effects, and candid everyday scenes.", 
+                artist: "Claude Monet", artwork: "Impression, Sunrise", 
+                image: "images/impressionism.jpg", 
+                fact: "The term 'Impressionism' was originally used as an insult by a hostile critic reviewing Monet's sketchy exhibition." 
+            },
+            { 
+                id: 8, name: "Fauvism", period: "c. 1900 – 1910", 
+                desc: "Translating to 'wild beasts', Fauvism broke away from representational color to use intense, non-naturalistic hues as a pure expressive vehicle for emotion.", 
+                characteristics: "Explosive arbitrary color, simple bold outlines, spontaneous brushwork, and flattened perspective.", 
+                artist: "Henri Matisse", artwork: "Woman with a Hat", 
+                image: "images/fauvism.jpg", 
+                fact: "Fauvists shocked art critics in Paris by painting trees bright red and human faces in green and yellow." 
+            },
+            { 
+                id: 9, name: "Cubism", period: "c. 1907 – 1914", 
+                desc: "Pioneered by Pablo Picasso and Georges Braque in Paris, Cubism shattered traditional illusionistic painting by breaking subjects into geometric facets and showing multiple angles simultaneously.", 
+                characteristics: "Fragmented geometric shapes, multi-perspective view angles on one plane, flattened spatial depth, and subdued color tones.", 
+                artist: "Pablo Picasso", artwork: "Les Demoiselles d'Avignon", 
+                image: "images/cubism.jpg", 
+                fact: "Cubism was heavily inspired by carved African masks, prioritizing geometric abstraction over natural human proportion." 
+            },
+            { 
+                id: 10, name: "Futurism", period: "c. 1909 – 1918", 
+                desc: "An aggressive Italian vanguard movement celebrating speed, technology, industrial urbanism, and the dynamic energy of the modern machine age.", 
+                characteristics: "Dynamic repetition of forms indicating motion, fractured planes, diagonal force lines, and industrial subjects.", 
+                artist: "Umberto Boccioni", artwork: "Unique Forms of Continuity in Space", 
+                image: "images/futurism.jpg", 
+                fact: "Futurists glorified machines, cars, and factories, famously declaring that a roaring racing car is more beautiful than classical Greek sculptures." 
+            },
+            { 
+                id: 11, name: "Expressionism", period: "c. 1905 – 1920", 
+                desc: "Emerging in Germany, Expressionism distorted objective physical reality to convey raw psychological anxiety, alienation, and deep emotional angst.", 
+                characteristics: "Jagged lines, harsh exaggerated colors, distorted figures, and intense psychological emotion.", 
+                artist: "Edvard Munch", artwork: "The Scream", 
+                image: "images/expressionism.jpg", 
+                fact: "Edvard Munch wrote in his diary that he felt an 'infinite scream passing through nature' while walking at sunset." 
+            },
+            { 
+                id: 12, name: "Dadaism", period: "c. 1916 – 1924", 
+                desc: "Born out of horror and disgust at World War I, Dada was an anti-art movement that used absurdity, irony, and randomness to challenge traditional artistic conventions.", 
+                characteristics: "Readymade mass-produced objects transformed into art, photomontage collages, nonsense poetry, and provocative satire.", 
+                artist: "Marcel Duchamp", artwork: "Fountain", 
+                image: "images/dadaism.jpg", 
+                fact: "The word 'Dada' was chosen at random by stabbing a paper knife into a French-German dictionary." 
+            },
+            { 
+                id: 13, name: "Surrealism", period: "c. 1924 – 1966", 
+                desc: "Influenced by dream analysis, Surrealism sought to unlock the hidden creative potential of the unconscious mind, producing dreamlike and illogical imagery.", 
+                characteristics: "Bizarre juxtapositions of unrelated objects, dreamlike landscapes, distorted reality, and photographic detail.", 
+                artist: "Salvador Dalí", artwork: "The Persistence of Memory", 
+                image: "images/surrealism.jpg", 
+                fact: "Dalí would hold a key balanced over a metal pan while napping so its drop would wake him to sketch his dreams immediately." 
+            },
+            { 
+                id: 14, name: "Constructivism", period: "c. 1915 – 1930s", 
+                desc: "Emerging in Russia after the Bolshevik Revolution, Constructivism rejected autonomous art to build industrial, socially useful art, architecture, and design for collective society.", 
+                characteristics: "Geometric abstraction, stark industrial materials (steel, glass, wood), bold red and black color palettes, and dynamic typography.", 
+                artist: "El Lissitzky", artwork: "Beat the Reds with the Red Wedge", 
+                image: "images/constructivism.jpg", 
+                fact: "Constructivists treated art as a form of engineering, designing posters, buildings, and furniture for the new Soviet worker state." 
+            },
+            { 
+                id: 15, name: "Abstract Expressionism", period: "c. 1940s – 1950s", 
+                desc: "Emerging in New York after World War II, this movement established America as a global art center. It prioritized spontaneous, non-representational execution to convey raw emotion.", 
+                characteristics: "Massive canvas scale, spontaneous action painting (dripping/splattering), color field washes, and absence of physical objects.", 
+                artist: "Jackson Pollock", artwork: "No. 5, 1948", 
+                image: "images/abstract_expressionism.jpg", 
+                fact: "Jackson Pollock placed large canvases directly on the floor so he could walk around them and drip paint from above." 
+            },
+            { 
+                id: 16, name: "Pop Art", period: "c. 1950s – 1970s", 
+                desc: "Emerging in Britain and the US as a challenge to fine art elite traditions, Pop Art embraced mass consumer culture, commercial advertising, comic strips, and celebrity media imagery.", 
+                characteristics: "Vivid commercial colors, silkscreen mass-production techniques, repetition of consumer brands, bold outlines, and ironic appropriation.", 
+                artist: "Andy Warhol", artwork: "Campbell's Soup Cans", 
+                image: "images/pop_art.jpg", 
+                fact: "Andy Warhol famously said: 'In the future, everyone will be world-famous for 15 minutes.'" 
+            },
+            { 
+                id: 17, name: "Op Art (Optical Art)", period: "c. 1960s – Present", 
+                desc: "A mathematically precise style of abstract art that explores optical illusions. Using geometric patterns and high contrast, Op Art creates impressions of visual movement.", 
+                characteristics: "High-contrast geometric patterns, repeating lines, optical illusions of warping or vibration, and mathematical precision.", 
+                artist: "Bridget Riley", artwork: "Current", 
+                image: "images/op_art.jpg", 
+                fact: "Op Art pieces are completely stationary, yet our brains interpret their high-contrast geometric lines as vibrating and undulating." 
+            }
+        ];
+        
+        let currentIndex = 0;
+
+        const timelineTrack = document.getElementById('timelineTrack');
+        const movementCard = document.getElementById('movementCard');
+        const searchInput = document.getElementById('searchInput');
+
+        const movementTitle = document.getElementById('movementTitle');
+        const movementEra = document.getElementById('movementEra');
+        const movementIndexBadge = document.getElementById('movementIndexBadge');
+        const movementDesc = document.getElementById('movementDesc');
+        const movementChars = document.getElementById('movementChars');
+        const movementFact = document.getElementById('movementFact');
+        const artistName = document.getElementById('artistName');
+        const artTitle = document.getElementById('artTitle');
+        const artImage = document.getElementById('artImage');
+
+        const currentCounter = document.getElementById('currentCounter');
+        const totalCounter = document.getElementById('totalCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initApp() {
+            totalCounter.textContent = movements.length;
+            renderTimelineTrack();
+            updateDisplay(0);
+            setupEventListeners();
+        }
+
+        function renderTimelineTrack() {
+            timelineTrack.innerHTML = '';
+            movements.forEach((item, index) => {
+                const node = document.createElement('button');
+                node.className = `glass-node flex-shrink-0 px-4 py-2.5 rounded-xl border text-left transition-all duration-300 flex flex-col min-w-[150px] ${
+                    index === currentIndex 
+                        ? 'border-gold-500 bg-gold-500/20 shadow-lg scale-105 text-white' 
+                        : 'border-white/10 hover:border-gold-500/50 text-gray-400 hover:text-gray-200'
+                }`;
+                node.onclick = () => updateDisplay(index);
+
+                node.innerHTML = `
+                    <span class="text-[10px] font-mono text-gold-400 uppercase tracking-widest">#${String(item.id).padStart(2, '0')}</span>
+                    <span class="text-xs font-serif font-bold truncate ${index === currentIndex ? 'text-gold-400' : 'text-gray-200'}">${item.name}</span>
+                    <span class="text-[11px] opacity-70">${item.period.split('–')[0]}</span>
+                `;
+                timelineTrack.appendChild(node);
+            });
+        }
+
+        function updateDisplay(index) {
+            if (index < 0 || index >= movements.length) return;
+
+            currentIndex = index;
+            const item = movements[currentIndex];
+
+            movementCard.classList.remove('fade-active');
+            movementCard.classList.add('fade-enter');
+
+            setTimeout(() => {
+                movementTitle.textContent = item.name;
+                movementEra.textContent = item.period;
+                movementIndexBadge.textContent = `Movement ${String(item.id).padStart(2, '0')} of ${movements.length}`;
+                movementDesc.textContent = item.desc;
+                movementChars.textContent = item.characteristics;
+                movementFact.textContent = item.fact;
+                artistName.textContent = `By ${item.artist}`;
+                artTitle.textContent = item.artwork;
+
+                artImage.src = item.image;
+                artImage.alt = `${item.artwork} by ${item.artist}`;
+
+                currentCounter.textContent = item.id;
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === movements.length - 1;
+
+                renderTimelineTrack();
+
+                const activeNode = timelineTrack.children[currentIndex];
+                if (activeNode) {
+                    activeNode.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                }
+
+                movementCard.classList.remove('fade-enter');
+                movementCard.classList.add('fade-active');
+            }, 150);
+        }
+
+        function setupEventListeners() {
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) updateDisplay(currentIndex - 1);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < movements.length - 1) updateDisplay(currentIndex + 1);
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (document.activeElement.tagName === 'INPUT') return;
+                if (e.key === 'ArrowLeft' && currentIndex > 0) updateDisplay(currentIndex - 1);
+                if (e.key === 'ArrowRight' && currentIndex < movements.length - 1) updateDisplay(currentIndex + 1);
+            });
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                if (!query) return;
+
+                const foundIndex = movements.findIndex(m => 
+                    m.name.toLowerCase().includes(query) || 
+                    m.artist.toLowerCase().includes(query) ||
+                    m.artwork.toLowerCase().includes(query)
+                );
+
+                if (foundIndex !== -1) updateDisplay(foundIndex);
+            });
+        }
+
+        window.onload = initApp;
+
+        // NEW: Audio Curator Voiceover Function with Play/Stop Toggle & Female Voice
+        function playAudioGuide() {
+            if (!('speechSynthesis' in window)) {
+                alert("Sorry, your browser doesn't support audio speech synthesis.");
+                return;
+            }
+
+            const btn = document.getElementById('audioBtn');
+
+            // If it is already speaking, clicking it again will STOP/CANCEL the audio
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                if(btn) {
+                    btn.innerHTML = `<i class="fa-solid fa-volume-high"></i> Play Audio Guide`;
+                }
+                return;
+            }
+
+            const item = movements[currentIndex];
+            const textToSpeak = `Now featuring movement ${item.id}, ${item.name}, from ${item.period}. Masterpiece artwork: ${item.artwork}, created by ${item.artist}. Overview: ${item.desc} Curator Note: ${item.fact}`;
+            
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.rate = 0.95; 
+            utterance.pitch = 1.0;
+
+            // Select a clear female voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find(v => 
+                v.lang.startsWith('en') && (
+                    v.name.toLowerCase().includes('female') || 
+                    v.name.toLowerCase().includes('zira') || 
+                    v.name.toLowerCase().includes('susan') || 
+                    v.name.toLowerCase().includes('hazel') ||
+                    v.name.toLowerCase().includes('aria') ||
+                    v.name.toLowerCase().includes('jenny') ||
+                    v.name.toLowerCase().includes('google uk english female') ||
+                    v.name.toLowerCase().includes('google us english')
+                )
+            );
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
+            // Visual feedback while speaking
+            if(btn) {
+                btn.innerHTML = `<i class="fa-solid fa-volume-high animate-pulse text-gold-400"></i> Stop Audio`;
+                utterance.onend = () => {
+                    btn.innerHTML = `<i class="fa-solid fa-volume-high"></i> Play Audio Guide`;
+                };
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>
